@@ -1,7 +1,5 @@
-CREATE
-DATABASE IF NOT EXISTS appgo;
-USE
-appgo;
+CREATE DATABASE IF NOT EXISTS appgo;
+USE appgo;
 
 DROP TABLE IF EXISTS usuarios;
 
