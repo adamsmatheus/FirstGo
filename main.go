@@ -1,7 +1,7 @@
 package main
 
 import (
-	"GoTest/config"
+	"GoTest/src/config"
 	"GoTest/src/router"
 	"fmt"
 	"log"
