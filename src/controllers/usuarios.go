@@ -3,6 +3,7 @@ package controllers
 import (
 	"GoTest/src/banco"
 	"GoTest/src/modelos"
+	"GoTest/src/repositorios"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -26,7 +27,8 @@ func CriarUsuario(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(erro)
 	}
 
-	repositorio := repositorio.Novo
+	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
+	repositorio.Criar(usuario)
 
 }
 
