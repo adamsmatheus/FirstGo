@@ -24,7 +24,7 @@ func Carregar() {
 	if erro != nil {
 		Porta = 9000
 	}
-	StringConexao = fmt.Sprintf("connectionString := fmt.Sprintf(\"%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
+	StringConexao = fmt.Sprintf("%s:%s@/%s?charset=utf8&parseTime=True&loc=Local",
 		os.Getenv("DB_USUARIO"),
 		os.Getenv("DB_PASSWORD"),
 		os.Getenv("DB_NOME"))
