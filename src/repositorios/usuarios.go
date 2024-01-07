@@ -39,5 +39,29 @@ func (repositorio Usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 // Busca pelos registros por filtro
 func (repositorio Usuarios) Buscar(nomeouNick string) ([]modelos.Usuario, error) {
 	nomeouNick = fmt.Sprintf("%%%s%%", nomeouNick)
+	linhas, erro := repositorio.db.Query(""+
+		"select id, nome, nick, email, criadoEm from usuarios where nome LIKE ? or nick LIKE ?", nomeouNick, nomeouNick)
+	if erro != nil {
+		return nil, erro
+	}
 
+	defer linhas.Close()
+
+	var usuarios []modelos.Usuario
+
+	for linhas.Next() {
+		var usuario modelos.Usuario
+		if erro = linhas.Scan(
+			&usuario.ID,
+			&usuario.Nome,
+			&usuario.Nick,
+			usuario.Email,
+			usuario.CriadoEm,
+		); erro != nil {
+			return nil, erro
+		}
+		usuarios = append(usuarios, usuario)
+	}
+
+	return usuarios, nil
 }
