@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 // Funcao que cria usuarios no sistema
@@ -48,7 +49,16 @@ func BuscarUsuario(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Buscando usuario especifico"))
 }
 func BuscarUsuarios(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Buscando todos os usuarios"))
+	nomeOuNick := strings.ToLower(r.URL.Query().Get("usuario"))
+	db,erro := banco.Conectar()
+	if erro != nil{
+		respostas.Erro(w,http.StatusInternalServerError,erro)\
+		return
+	}
+	defer db.Close()
+
+	repositorio := repositorios.NovoRepositorioDeUsuarios(db)
+	usuarios, erro := repositorio.Buscar(nomeOuNick)
 }
 func EditarUsuario(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Editando os usuarios"))

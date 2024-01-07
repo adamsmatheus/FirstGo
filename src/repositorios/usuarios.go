@@ -3,6 +3,7 @@ package repositorios
 import (
 	"GoTest/src/modelos"
 	"database/sql"
+	"fmt"
 )
 
 type Usuarios struct {
@@ -33,4 +34,10 @@ func (repositorio Usuarios) Criar(usuario modelos.Usuario) (uint64, error) {
 	return uint64(ultimoIdInserido), nil
 
 	return 0, nil
+}
+
+// Busca pelos registros por filtro
+func (repositorio Usuarios) Buscar(nomeouNick string) ([]modelos.Usuario, error) {
+	nomeouNick = fmt.Sprintf("%%%s%%", nomeouNick)
+
 }
