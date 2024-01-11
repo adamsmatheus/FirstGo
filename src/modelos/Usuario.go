@@ -1,7 +1,9 @@
 package modelos
 
 import (
+	"GoTest/src/seguranca"
 	"errors"
+	"github.com/badoux/checkmail"
 	"strings"
 	"time"
 )
@@ -32,14 +34,26 @@ func (usuario *Usuario) validar(etapa string) error {
 		return errors.New("O campo senha e obrigatorio!")
 	}
 
+	if erro := checkmail.ValidateFormat(usuario.Email); erro != nil {
+		return errors.New("O email esta em um formato invalido")
+	}
+
 	return nil
 }
 
-func (usuario *Usuario) RemoveEspaco() {
+func (usuario *Usuario) RemoveEspaco(etapa string) error {
 	usuario.Nome = strings.TrimSpace(usuario.Nome)
 	usuario.Email = strings.TrimSpace(usuario.Email)
 	usuario.Nick = strings.TrimSpace(usuario.Nick)
 
+	if etapa == "cadastro" {
+		senhacomHash, erro := seguranca.Hash(usuario.Senha)
+		if erro != nil {
+			return erro
+		}
+		usuario.Senha = string(senhacomHash)
+	}
+	return nil
 }
 
 // Método que será chamado pelo controller.
@@ -48,7 +62,9 @@ func (usuario *Usuario) Preparar(etapa string) error {
 		return erro
 	}
 
-	usuario.RemoveEspaco()
+	if erro := usuario.RemoveEspaco(etapa); erro != nil {
+		return erro
+	}
 	return nil
 
 }
