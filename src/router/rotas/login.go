@@ -1,12 +1,13 @@
 package rotas
 
-import "net/http"
+import (
+	"GoTest/src/controllers"
+	"net/http"
+)
 
 var rotaLogin = Rota{
-	Uri:    "/login",
-	Metodo: http.MethodPost,
-	Funcao: func(writer http.ResponseWriter, request *http.Request) {
-
-	},
+	Uri:                "/login",
+	Metodo:             http.MethodPost,
+	Funcao:             controllers.Login,
 	RequerAutenticacao: false,
 }
