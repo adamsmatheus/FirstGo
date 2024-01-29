@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"GoTest/src/autenticacao"
 	"GoTest/src/banco"
 	"GoTest/src/modelos"
 	"GoTest/src/repositorios"
@@ -45,5 +46,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write([]byte("Você está logado !"))
+	token, erro := autenticacao.CriarToken(usuarioSalvoNoBanco.ID)
+	if erro != nil {
+		respostas.Erro(w, http.StatusInternalServerError, erro)
+		return
+	}
+	w.Write([]byte(token))
 }
