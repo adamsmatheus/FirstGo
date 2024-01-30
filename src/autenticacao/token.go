@@ -2,6 +2,8 @@ package autenticacao
 
 import (
 	"GoTest/src/config"
+	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"strings"
@@ -20,7 +22,14 @@ func CriarToken(usuarioID uint64) (string, error) {
 
 func ValidarToken(r *http.Request) error {
 	tokenString := ExtrairToken(r)
-	token, erro := jwt.Parse(tokenString)
+	token, erro := jwt.Parse(tokenString, retornarChaveDeVerificacao)
+	if erro != nil {
+		return erro
+	}
+	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return nil
+	}
+	return errors.New("token invalido")
 }
 
 func ExtrairToken(r *http.Request) string {
@@ -32,4 +41,11 @@ func ExtrairToken(r *http.Request) string {
 	}
 
 	return " "
+}
+
+func retornarChaveDeVerificacao(token *jwt.Token) (interface{}, error) {
+	if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+		return nil, fmt.Errorf("método inesperado! %v", token.Header["alg"])
+	}
+	return config.SecretKey, nil
 }
