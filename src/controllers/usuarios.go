@@ -1,11 +1,13 @@
 package controllers
 
 import (
+	"GoTest/src/autenticacao"
 	"GoTest/src/banco"
 	"GoTest/src/modelos"
 	"GoTest/src/repositorios"
 	"GoTest/src/respostas"
 	"encoding/json"
+	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
@@ -97,6 +99,19 @@ func EditarUsuario(w http.ResponseWriter, r *http.Request) {
 		respostas.Erro(w, http.StatusBadRequest, erro)
 		return
 	}
+
+	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+		return
+	}
+
+	if usuarioID != usuarioIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, erro)
+		return
+	}
+
+	fmt.Println(usuarioIDNoToken)
 	corpoRequisicao, erro := ioutil.ReadAll(r.Body)
 	if erro != nil {
 		respostas.Erro(w, http.StatusUnprocessableEntity, erro)
