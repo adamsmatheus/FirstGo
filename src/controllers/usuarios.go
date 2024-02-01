@@ -7,6 +7,7 @@ import (
 	"GoTest/src/repositorios"
 	"GoTest/src/respostas"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
@@ -107,7 +108,7 @@ func EditarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if usuarioID != usuarioIDNoToken {
-		respostas.Erro(w, http.StatusForbidden, erro)
+		respostas.Erro(w, http.StatusForbidden, errors.New("Voce nao tem permissao para editar esse registro"))
 		return
 	}
 
