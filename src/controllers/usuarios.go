@@ -168,6 +168,13 @@ func DeletarUsuario(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer db.Close()
-	respostas.JSON(w, http.StatusNoContent, nil)
+	usuarioIDNoToken, erro := autenticacao.ExtrairUsuarioID(r)
+	if erro != nil {
+		respostas.Erro(w, http.StatusUnauthorized, erro)
+	}
+	if usuarioID != usuarioIDNoToken {
+		respostas.Erro(w, http.StatusForbidden, errors.New("Não é possivel excluir"))
+		return
+	}
 
 }
